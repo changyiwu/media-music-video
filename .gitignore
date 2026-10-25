@@ -1,0 +1,22 @@
+desktop.ini
+*.tmp
+~$*
+.env
+*.key
+credentials.*
+
+# 交接檔含真實電腦名與本機路徑，只走雲端硬碟同步，不進公開 repo
+handoff.md
+
+# comfy-cli 回傳、節點資訊、紀錄等暫存
+scratch/
+__pycache__/
+
+# 影音成品很大，放在 ComfyUI 的 output 資料夾，不進 git
+*.mp4
+*.mov
+*.wav
+*.mp3
+
+# 產出一律放 output/，不進 git
+output/

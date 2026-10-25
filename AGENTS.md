@@ -61,7 +61,7 @@ media-music-video/
 │   │   └── mv-full-v2/  全曲 v2 來源、分鏡與驗收紀錄
 │   └── motion-showreel/ 15 秒動態設計 showreel（Canvas 2D 逐格＋Headless Edge 擷取＋numpy 配樂）
 │       └── hf/          同一支片的 HyperFrames 比較版（登錄元件＋GSAP＋Three.js，配樂共用）
-├── templates/           官方工作流程快照（Z-Image、Qwen Image Edit）、發布資訊範本.md（YouTube／Facebook／Instagram）
+├── templates/           官方工作流程快照（Z-Image、Qwen Image Edit）、發布資訊範本.md（YouTube／Facebook／Instagram／Threads；五個媒體專案各一份、內容逐位元組相同，正本在 media-youtube-publish 的 `skills/youtube-video-workflow/references/`，改正本再整份覆蓋，不在本專案就地改）
 └── scratch/             comfy-cli 回傳、節點資訊、紀錄等暫存（不進 git）
 ```
 

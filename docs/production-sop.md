@@ -57,7 +57,7 @@
 
 ## 四、發布前檢查清單（硬規則）
 
-作品驗收通過後，照 [發布資訊範本](../templates/發布資訊範本.md) 建立 `output/<slug>/發布資訊.md`，填寫 YouTube／Facebook／Instagram 文案、AI 揭露與實際工具名單。需要上傳的檔案以 `notes.md` 定稿清單中的分享版為準；發布後把公開網址記回該文件。
+作品驗收通過後，照 [發布資訊範本](../templates/發布資訊範本.md) 建立 `output/<slug>/發布資訊.md`，填寫 YouTube／Facebook／Instagram／Threads 文案、AI 揭露與實際工具名單。需要上傳的檔案以 `notes.md` 定稿清單中的分享版為準；發布後把公開網址記回該文件。
 
 > 使用者說要發布（社群、傳給別人）時**主動提醒一次**，同意後才做。
 > **一律另存新檔，ComfyUI 的原始輸出不動。**

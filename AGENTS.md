@@ -14,7 +14,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 ## 關鍵時程
 
 - 2026-09-15：歌曲〈衝破這片天〉（Music 3 三版＋Z-Image 封面，做成 FB 影片），09-18 整理進 `output/power-ballad/`
-- 2026-09-16～18：第一支片「古裝庭院惡搞短片」完成（四段、23 秒；2026-10-25 移至 `media-short-film/films/原創短劇/臭豆腐/`）
+- 2026-09-16～18：第一支片「古裝庭院惡搞短片」完成（四段、23 秒；2026-10-25 移至 `media-short-film/output/原創短劇/臭豆腐/`）
 - 2026-09-18：專案初始化（原名 `ai-video-studio`），從 `agents-lazy-guide/comfyui/` 整批搬入工作流程與實驗檔；
   同日收進歌曲作品、範圍擴大到影音作品，改名 `ai-media-studio`（GitHub 舊網址自動轉址）；2026-10-20 全 agents/ 改名為 `media-comfyui-studio`
 - 2026-09-28：〈衝破這片天〉歌曲定稿為剪接版（134 秒），並做成動態歌詞 MV（各行各業版，`output/power-ballad/lyric-video/`；
@@ -22,7 +22,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-09-29：仿蘋果發表廣告〈Banana 18 Pro〉60 秒 v3 完成（2026-10-25 移至 `media-3d-studio/output/banana-18-pro/`）——第一件**不用 ComfyUI**、
   全程式製作的作品（Blender bpy 建模算圖＋Python 合成＋numpy 合成配樂）
 - 2026-10-09：15 秒動態設計 showreel〈動態設計作品集〉（`output/motion-showreel/`）——Canvas 2D 全程式動畫＋numpy 配樂，128 BPM 八場對拍；同日另做 HyperFrames 比較版（`hf/`）
-- 2026-10-11：測試 Blender 灰模動作片當 H3 Ref2VA 參考影片（2026-10-25 瘦身後移至 `media-short-film/films/測試/測試_H3灰模動作參考/`）——動作會照做、時間逐格對齊，
+- 2026-10-11：測試 Blender 灰模動作片當 H3 Ref2VA 參考影片（2026-10-25 瘦身後移至 `media-short-film/output/測試/測試_H3灰模動作參考/`）——動作會照做、時間逐格對齊，
   推翻先前「Blender previz 這條路劃掉」的結論（只對機位成立）；結論寫回 `comfyui`（guide v0.15）
 - 2026-10-12：同一測試補三項——人物照＋灰模動作片可同時用（指定的人做指定的動作）、灰模片的運鏡會跟且壓過文字、
   動作句不提 `<Video 1>` 時參考片幾乎無效但照樣慢 3.5 倍（guide v0.16）
@@ -32,7 +32,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
   雙人各做各的動作放同一支參考片即可（分兩支接成本翻倍）；參考片的音軌接了就被原樣搬進成品、提示詞不提也一樣（guide v0.18）
 - 2026-10-25：H3 短片與測試搬到 `media-short-film`、〈Banana 18 Pro〉搬到 `media-3d-studio`，刪除 `tools/ref2va.py`
 - 2026-10-25：依留下的作品（兩首歌＋MV、一支配樂 showreel）改名 `media-comfyui-studio` → `media-music-video`（資料夾、GitHub repo、Obsidian 同步改）；
-  同日 `experiments/` 與 H3 範本移到 `media-short-film/films/測試/早期實驗/`，SOP 的 H3 影片段落改指向該專案 `docs/`
+  同日 `experiments/` 與 H3 範本移到 `media-short-film/output/測試/早期實驗/`，SOP 的 H3 影片段落改指向該專案 `docs/`
 
 ## 目標與路線圖
 

@@ -300,7 +300,8 @@ class March(Arrangement):
 
 ROCK_PROGRAMS = {"gtr_l": (0, 30), "gtr_r": (1, 29), "lead": (2, 30), "bass": (3, 34), "piano": (4, 0),
                  "strings": (5, 48), "drums": (9, None), "guide": (6, 73)}  # 破音吉他×2（左右）、主奏吉他、彈片貝斯、鋼琴、弦樂
-ROCK_VOLUME = {"gtr_l": 82, "gtr_r": 82, "lead": 90, "bass": 104, "piano": 84, "strings": 80, "drums": 100, "guide": 90}
+ROCK_VOLUME = {"gtr_l": 112, "gtr_r": 112, "lead": 118, "bass": 104, "piano": 72, "strings": 68, "drums": 100, "guide": 90}
+# 2026-10-28 使用者要求電吉他加強：吉他 82→112、主奏 90→118，鋼琴、弦樂讓位
 ROCK_PAN = {"gtr_l": 22, "gtr_r": 106, "lead": 64, "bass": 64, "piano": 50, "strings": 78, "drums": 64, "guide": 64}
 
 

@@ -5,7 +5,8 @@
 母帶：軟限幅、峰值 -1 dBFS，輸出 44.1kHz 16-bit 立體聲 wav
 兩個檔案都從 0 秒開始、取樣率要相同（OpenUtau 匯出與 FluidSynth 預設都是 44.1kHz）；人聲 MIDI 與伴奏用同一個 --intro-bars 就會對齊。
 
-用法：python mix.py <人聲 wav> <伴奏 wav> <輸出 wav> [--vocal-db 2] [--reverb 0.18]
+--warm：人聲「磁性」處理（中低頻加厚、收刺耳與齒音、輕微飽和），在高通之後、壓縮之前
+用法：python mix.py <人聲 wav> <伴奏 wav> <輸出 wav> [--vocal-db 2] [--reverb 0.18] [--warm 1]
 """
 import argparse
 
@@ -50,6 +51,21 @@ def reverb(x, sr, wet, seconds=1.6, seed=0):
     return x * (1 - wet) + y * wet * 2.0
 
 
+def warm(x, sr, amount=1.0):
+    """「磁性」處理：中低頻（約 250Hz）加厚、2～4kHz 刺耳處與 7kHz 齒音略收，再輕微飽和。amount 0～1.5"""
+    spec = np.fft.rfft(x, axis=0)
+    f = np.maximum(np.fft.rfftfreq(len(x), 1 / sr), 1)
+
+    def bell(fc, db, octaves):
+        return db * np.exp(-0.5 * (np.log2(f / fc) / (octaves / 2)) ** 2)
+
+    g = amount * (bell(250, 3.5, 1.6) + bell(3000, -2.0, 1.5) + bell(7000, -3.0, 1.0))
+    y = np.fft.irfft(spec * (10 ** (g / 20))[:, None], n=len(x), axis=0)
+    drive = 1 + 1.5 * amount
+    peak = np.abs(y).max() + 1e-9
+    return np.tanh(y / peak * drive) / np.tanh(drive) * peak
+
+
 def rms(x):
     return np.sqrt((x ** 2).mean()) + 1e-12
 
@@ -61,6 +77,7 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--vocal-db", type=float, default=2.0, help="歌唱段落人聲比伴奏大幾 dB")
     ap.add_argument("--reverb", type=float, default=0.18)
+    ap.add_argument("--warm", type=float, default=0, help="人聲「磁性」處理強度 0～1.5（0＝不處理）")
     a = ap.parse_args()
     v, sr = read(a.vocal)
     acc, sr2 = read(a.acc)
@@ -70,6 +87,8 @@ def main():
     acc = np.pad(acc, ((0, n - len(acc)), (0, 0)))
 
     v = highpass(v, sr, 100)
+    if a.warm:
+        v = warm(v, sr, a.warm)
     v = compress(v, sr)
     v = reverb(v, sr, a.reverb)
 

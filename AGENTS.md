@@ -34,6 +34,8 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-10-25：依留下的作品（兩首歌＋MV、一支配樂 showreel）改名 `media-comfyui-studio` → `media-music-video`（資料夾、GitHub repo、Obsidian 同步改）；
   同日 `experiments/` 與 H3 範本移到 `media-short-film/output/測試/早期實驗/`，SOP 的 H3 影片段落改指向該專案 `docs/`
 - 2026-10-26：作品資料夾比照 `media-short-film` 改成 `output/<類型>/<作品名>/`（歌曲MV／動態設計）：定案成品放最上層、工作檔放 `work/`、舊版放 `舊版/`，`notes.md` 改名 `製作紀錄.md`
+- 2026-10-28：〈沙鹿國中校歌〉輕快改編——YuE2／ACE-Step 都做不到照譜唱（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
+  同日把這首的腳本整理成共用的 `tools/sing/` 與 `docs/照譜唱歌曲流程.md`
 
 ## 目標與路線圖
 
@@ -48,7 +50,8 @@ media-music-video/
 ├── AGENTS.md            本檔（專案藍圖）
 ├── handoff.md           交接檔（不進 git）
 ├── CLAUDE.md            橋接檔（@AGENTS.md）
-├── docs/                作品製作 SOP、發布檢查清單、動畫 MV 畫面規則（模型知識指向 comfyui 技能，不另存一份）
+├── docs/                作品製作 SOP、發布檢查清單、動畫 MV 畫面規則（模型知識指向 comfyui 技能，不另存一份）、照譜唱歌曲流程
+├── tools/sing/          照譜唱歌曲工具（song.json → 人聲 MIDI、和弦、輕快編曲、FluidSynth 算圖、混音；只用 numpy＋ffmpeg）
 ├── output/              所有產出（不進 git，只走雲端硬碟同步）；一件作品一個資料夾 `output/<類型>/<作品名>/`
 │   ├── <類型>/<作品名>/  最上層放定案成品與文件：<作品名>.mp4、_社群版.mp4、_手機版.mp4、<作品名>.mp3、字幕 .srt、
 │   │                    cover*.png、製作紀錄.md、發布資訊.md、歌詞.txt、主腳本；工作檔放 work/，舊版放 舊版/
@@ -71,6 +74,8 @@ media-music-video/
 
 ## 專案專屬規則
 
+- **使用者給了譜、要求照譜照詞唱的歌（校歌、既有歌曲改編）不用 ComfyUI**，照 `docs/照譜唱歌曲流程.md`：
+  旋律打成作品的 `work/譜/song.json`，用 `tools/sing/` 出 MIDI 與伴奏、OpenUtau 唱人聲；改進工具就改 `tools/sing/`，不要複製進作品資料夾。
 - **ComfyUI 的操作方式與模型規則不在本專案另存一份**，一律照 `comfyui` 技能與它的 `models/` 筆記。
   實測出通用經驗就寫回 agent-setup-guide 的技能與 guide，本專案只留該片專屬的設定與決定。
 - **製作流程與發布把關照 `docs/production-sop.md`**：開新作品的順序、跨作品已定案的選型、三種格式的 metadata

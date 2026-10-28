@@ -1,6 +1,6 @@
-"""編曲（輕快流行樂團／管弦樂進行曲）：照 song.json 的旋律與和弦產生多軌 GM 伴奏 MIDI 與 numpy 粗略預覽。旋律一個音都不改。
+"""編曲（輕快流行樂團／管弦樂進行曲／搖滾）：照 song.json 的旋律與和弦產生多軌 GM 伴奏 MIDI 與 numpy 粗略預覽。旋律一個音都不改。
 
-用法：python arrange.py <song.json> [--key C] [--bpm 128] [--intro-bars 4] [--style band|march] [--tag 輕快版] [--out 資料夾]
+用法：python arrange.py <song.json> [--key C] [--bpm 128] [--intro-bars 4] [--style band|march|rock] [--tag 輕快版] [--out 資料夾]
 
 結構（每小節 16 個十六分音符）：
 - 前奏 N 小節：鐘琴＋銅管演奏最後 N 小節的旋律，和弦同那 N 小節
@@ -9,7 +9,7 @@
 - 副歌（chorus_bar 到最後）：全團、Crash、貝斯跳五度；brass_hits 指定小節的旋律加銅管重音
 - 尾奏：主和弦齊奏一小節
 song.json 沒寫 arrange.chorus_bar 時整首當主歌。人聲 MIDI 用 score.py 同一個 --intro-bars 對齊。
---style march：管弦樂進行曲（見 March 類別說明），配 MuseScore General 音色庫算（render.py --sf MuseScore_General）
+--style march：管弦樂進行曲、--style rock：搖滾（見 March、Rock 類別說明），都配 MuseScore General 音色庫算（render.py --sf MuseScore_General）
 輸出：伴奏_<tag>_<BPM>BPM.mid、_含旋律導引.mid（多一軌長笛奏旋律，試聽用）、伴奏預覽_*.wav（band 才有，只聽結構，不是成品音質）
 真樂器音色用 render.py（FluidSynth）把 MIDI 算成 wav。
 """
@@ -298,6 +298,104 @@ class March(Arrangement):
         return tr, cc
 
 
+ROCK_PROGRAMS = {"gtr_l": (0, 30), "gtr_r": (1, 29), "lead": (2, 30), "bass": (3, 34), "piano": (4, 0),
+                 "strings": (5, 48), "drums": (9, None), "guide": (6, 73)}  # 破音吉他×2（左右）、主奏吉他、彈片貝斯、鋼琴、弦樂
+ROCK_VOLUME = {"gtr_l": 82, "gtr_r": 82, "lead": 90, "bass": 104, "piano": 84, "strings": 80, "drums": 100, "guide": 90}
+ROCK_PAN = {"gtr_l": 22, "gtr_r": 106, "lead": 64, "bass": 64, "piano": 50, "strings": 78, "drums": 64, "guide": 64}
+
+
+class Rock(Arrangement):
+    """搖滾：主歌左聲道破音吉他悶音八分音符＋鋼琴，副歌左右兩把吉他強力和弦（根音＋五度＋八度）、弦樂鋪底、
+    鼓改開放鈸／Crash、大鼓加密；前奏與 brass_hits 小節由主奏吉他奏旋律；尾奏強力和弦延長＋鼓收尾。
+    強力和弦不分大小調，只彈根音與五度，避免破音和弦糊掉。算圖：render.py --sf MuseScore_General --gain 0.5"""
+    programs, volume = ROCK_PROGRAMS, ROCK_VOLUME
+
+    def build(self):
+        rng = np.random.default_rng(2)
+        tr = {k: [] for k in ROCK_PROGRAMS if k != "guide"}
+        cc = {k: [(0, 10, ROCK_PAN[k])] for k in ROCK_PROGRAMS}
+
+        def add(part, s, d, m, v, human=True):
+            if human:
+                s += rng.uniform(0, 0.06)
+                v += int(rng.integers(-5, 6))
+            tr[part].append((s, d, m, int(np.clip(v, 1, 127))))
+
+        def power(pc, lo=40):
+            r = lo + (pc - lo) % 12
+            return [r, r + 7, r + 12]
+
+        for s, d, name in self.chord_halves():
+            sec = self.section(s)
+            _, pcs, bass = self.pcs(name)
+            root = 28 + (bass - 28) % 12  # 貝斯 E1～D#2
+            pw = power(bass)
+            if sec == "outro":
+                for m in pw:
+                    add("gtr_l", s, 16, m, 112)
+                    add("gtr_r", s, 16, m, 112)
+                add("bass", s, 16, root, 115)
+                add("strings", s, 16, pw[-1] + 12, 100)
+                continue
+            for i in range(0, d, 2):  # 貝斯八分音符
+                add("bass", s + i, 1.8, root, 100 if i % 4 == 0 else 86)
+            if sec == "verse":  # 主歌：左吉他悶音八分、鋼琴每拍和弦
+                for i in range(0, d, 2):
+                    for m in pw[:2]:
+                        add("gtr_l", s + i, 1.2, m, 84 if i % 4 == 0 else 72)
+                for i in range(0, d, 4):
+                    for m in sorted(x for x in range(55, 72) if x % 12 in pcs)[:3]:
+                        add("piano", s + i, 3, m, 70)
+            else:  # 前奏、過門、副歌：兩把吉他長音強力和弦＋右吉他八分推進
+                for m in pw:
+                    add("gtr_l", s, d - 0.3, m, 104)
+                for i in range(0, d, 2):
+                    for m in pw[:2]:
+                        add("gtr_r", s + i, 1.4, m, 96 if i % 4 == 0 else 84)
+                for m in sorted(x for x in range(60, 80) if x % 12 in pcs)[:3]:
+                    add("strings", s, d, m, 84)
+
+        D = tr["drums"]
+        fills = {self.intro - 1, self.intro, self.intro + self.chorus - 1, self.intro + self.nbars}
+        crashes = {0, self.intro + 1, self.intro + self.chorus}
+        for bar in range(self.end // BAR):
+            s, sec = bar * BAR, self.section(bar * BAR)
+            if sec == "outro":
+                D += [(s, 8, 49, 124), (s, 8, 57, 118), (s, 4, 36, 124)]
+                break
+            fill = bar in fills
+            if bar in crashes or (sec == "chorus" and bar % 4 == (self.intro + self.chorus) % 4):
+                add("drums", s, 8, 49, 118)
+            cym = 42 if sec == "verse" else 46  # 主歌閉合鈸、副歌開放鈸
+            for i in range(0, 16, 2):
+                if fill and i >= 8:
+                    break
+                add("drums", s + i, 1, cym, 82 if i % 4 == 0 else 66)
+            kicks = (0, 8, 10) if sec == "verse" else (0, 3, 6, 8, 10, 14)
+            for i in kicks:
+                if not (fill and i >= 8):
+                    add("drums", s + i, 2, 36, 112)
+            for i in (4, 12):
+                if not (fill and i == 12):
+                    add("drums", s + i, 2, 38, 108 if sec == "verse" else 120)
+            if fill:  # 筒鼓過門
+                for j, n in enumerate((50, 50, 48, 48, 47, 47, 45, 45)):
+                    add("drums", s + 8 + j, 1, n, 96 + j * 3)
+                add("drums", s + 15, 1, 38, 120)
+
+        # 主奏吉他：前奏奏最後幾小節旋律、brass_hits 小節疊旋律（低八度，避開人聲音域）
+        hits = set(self.song.arrange.get("brass_hits", []))
+        phrase_start = self.song.pickup_len + BAR * (self.nbars - self.intro)
+        for t, d, m, ch, py, first, bar_no in self.song.events():
+            if m is None:
+                continue
+            if self.intro and bar_no > self.nbars - self.intro:
+                add("lead", t - phrase_start, d, m, 108)
+            if bar_no in hits:
+                add("lead", self.vocal_at + t, d, m - 12, 100)
+        return tr, cc
+
+
 def write_midi(path, tr, bpm, programs=PROGRAMS, cc=None, volume=None):
     """tr：{軌名: [(起點, 長度, 音, 力度)]}，位置以十六分音符計（可為小數）；
     cc：{軌名: [(位置, 控制器號, 值)]}（例如 11 表情）；volume：{軌名: CC7 音量}"""
@@ -393,19 +491,19 @@ def main():
     ap.add_argument("--key")
     ap.add_argument("--bpm", type=float, default=128)
     ap.add_argument("--intro-bars", type=int, default=4)
-    ap.add_argument("--style", choices=["band", "march"], default="band", help="band：輕快流行樂團；march：管弦樂進行曲")
+    ap.add_argument("--style", choices=["band", "march", "rock"], default="band", help="band：輕快流行樂團；march：管弦樂進行曲；rock：搖滾")
     ap.add_argument("--tag", help="檔名標籤，預設 band＝輕快版、march＝管弦進行曲版")
     ap.add_argument("--out")
     a = ap.parse_args()
     song = Song(a.song, a.key)
     out = Path(a.out) if a.out else song.path.parent
-    name = f"{a.tag or {'band': '輕快版', 'march': '管弦進行曲版'}[a.style]}_{a.bpm:g}BPM"
-    if a.style == "march":
-        arr = March(song, a.intro_bars)
+    name = f"{a.tag or {'band': '輕快版', 'march': '管弦進行曲版', 'rock': '搖滾版'}[a.style]}_{a.bpm:g}BPM"
+    if a.style in ("march", "rock"):
+        arr = (March if a.style == "march" else Rock)(song, a.intro_bars)
         tr, cc = arr.build()
-        write_midi(out / f"伴奏_{name}.mid", tr, a.bpm, MARCH_PROGRAMS, cc, MARCH_VOLUME)
-        write_midi(out / f"伴奏_{name}_含旋律導引.mid", {**tr, "guide": arr.guide(12)}, a.bpm, MARCH_PROGRAMS, cc, MARCH_VOLUME)
-        sec = arr.end * 15 / a.bpm  # 管弦樂的 numpy 預覽沒有參考價值，直接用 render.py 算
+        write_midi(out / f"伴奏_{name}.mid", tr, a.bpm, arr.programs, cc, arr.volume)
+        write_midi(out / f"伴奏_{name}_含旋律導引.mid", {**tr, "guide": arr.guide(12)}, a.bpm, arr.programs, cc, arr.volume)
+        sec = arr.end * 15 / a.bpm  # 管弦樂、搖滾的 numpy 預覽沒有參考價值，直接用 render.py 算
     else:
         arr = Arrangement(song, a.intro_bars)
         tr = arr.build()

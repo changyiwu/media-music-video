@@ -34,7 +34,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-10-25：依留下的作品（兩首歌＋MV、一支配樂 showreel）改名 `media-comfyui-studio` → `media-music-video`（資料夾、GitHub repo、Obsidian 同步改）；
   同日 `experiments/` 與 H3 範本移到 `media-short-film/output/測試/早期實驗/`，SOP 的 H3 影片段落改指向該專案 `docs/`
 - 2026-10-26：作品資料夾比照 `media-short-film` 改成 `output/<類型>/<作品名>/`（歌曲MV／動態設計）：定案成品放最上層、工作檔放 `work/`、舊版放 `舊版/`，`notes.md` 改名 `製作紀錄.md`
-- 2026-10-28：〈沙鹿國中校歌〉輕快改編——YuE2／ACE-Step 都做不到照譜唱（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
+- 2026-10-28：〈校歌〉輕快改編——YuE2／ACE-Step 都做不到照譜唱（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
   同日把這首的腳本整理成共用的 `tools/sing/` 與 `docs/照譜唱歌曲流程.md`
 
 ## 目標與路線圖
@@ -58,9 +58,11 @@ media-music-video/
 │   ├── 歌曲MV/
 │   │   ├── 衝破這片天/   華語搖滾抒情歌（2026-09，Music 3＋封面）與全程式動態歌詞 MV
 │   │   │   └── work/     audio/、video/、image/、workflows/（從 metadata 取回）、lyric-video/（Canvas 2D 骨架動畫＋KTV 字幕）
-│   │   └── 把光留給我/   教師節歌曲與生圖＋程式動畫 MV
-│   │       ├── work/     audio/、video/、image/、workflows/、mv/（全曲 v2 來源、分鏡與驗收紀錄）
-│   │       └── 舊版/     mv-試片/（10 秒試片）、mv-full-v1/（全曲 v1）
+│   │   ├── 把光留給我/   教師節歌曲與生圖＋程式動畫 MV
+│   │   │   ├── work/     audio/、video/、image/、workflows/、mv/（全曲 v2 來源、分鏡與驗收紀錄）
+│   │   │   └── 舊版/     mv-試片/（10 秒試片）、mv-full-v1/（全曲 v1）
+│   │   └── 校歌/        校歌搖滾改編（2026-10，照譜唱：OpenUtau 绮萱＋tools/sing/ 編曲）
+│   │       └── work/     譜/（song.json、MIDI、OpenUtau 專案）、audio/（各版伴奏、人聲、混音）、旋律分析/、image/
 │   └── 動態設計/
 │       └── 動態設計作品集/ 15 秒 showreel（Canvas 2D 逐格＋Headless Edge 擷取＋numpy 配樂）
 │           └── work/     reel/（Canvas 版原始專案）、hf/（HyperFrames 比較版，配樂共用）、video/

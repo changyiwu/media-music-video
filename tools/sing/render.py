@@ -1,6 +1,8 @@
 """用 FluidSynth＋SoundFont 把伴奏 MIDI 算成真樂器 wav，剪掉尾端殘響並淡出。
 
-用法：python render.py <伴奏.mid> <輸出.wav> [--gain 0.6] [--tail 3.4] [--fade 1.5]
+用法：python render.py <伴奏.mid> <輸出.wav> [--sf GeneralUser-GS] [--gain 0.6] [--tail 3.4] [--fade 1.5] [--hall]
+- --sf：音色庫檔名（不含 .sf2，在 media-tools 的 soundfont 資料夾裡找）或完整路徑；樂團用 GeneralUser-GS，管弦樂用 MuseScore_General
+- --hall：開大廳殘響（管弦樂用；FluidSynth 內建殘響、房間 0.75、濕度 0.35）
 - 長度＝MIDI 最後一個事件＋tail 秒，最後 fade 秒淡出（FluidSynth 會把殘響算到很長）
 - 工具位置依序找：環境變數 FLUIDSYNTH／SOUNDFONT → 專案根目錄 local-config.json 的 "fluidsynth"／"soundfont"
   → %LOCALAPPDATA%\\media-tools\\ 底下（安裝方式見 docs/照譜唱歌曲流程.md）
@@ -82,16 +84,20 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("midi")
     ap.add_argument("out")
+    ap.add_argument("--sf", default="GeneralUser-GS")
+    ap.add_argument("--hall", action="store_true")
     ap.add_argument("--gain", type=float, default=0.6)
     ap.add_argument("--tail", type=float, default=3.4)
     ap.add_argument("--fade", type=float, default=1.5)
     a = ap.parse_args()
     fs = find_tool("FLUIDSYNTH", "fluidsynth", "fluidsynth*/**/bin/fluidsynth.exe")
-    sf = find_tool("SOUNDFONT", "soundfont", "soundfont/*.sf2")
+    sf = Path(a.sf) if Path(a.sf).suffix else find_tool("SOUNDFONT", "soundfont", f"soundfont/{a.sf}.sf2")
     length = midi_seconds(a.midi) + a.tail
     with tempfile.TemporaryDirectory() as td:
         raw = Path(td) / "raw.wav"
-        subprocess.run([str(fs), "-ni", "-q", "-g", str(a.gain), "-r", "44100", "-F", str(raw), str(sf), a.midi], check=True)
+        hall = ["-R", "1", "-o", "synth.reverb.room-size=0.75", "-o", "synth.reverb.damp=0.35",
+                "-o", "synth.reverb.width=1.0", "-o", "synth.reverb.level=0.6"] if a.hall else []
+        subprocess.run([str(fs), "-ni", "-q", "-g", str(a.gain), "-r", "44100", *hall, "-F", str(raw), str(sf), a.midi], check=True)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-t", f"{length:.3f}",
                         "-af", f"afade=t=out:st={length - a.fade:.3f}:d={a.fade}", "-c:a", "pcm_s16le", a.out], check=True)
     print(f"{a.out}：{length:.1f} 秒（{sf.name}）")

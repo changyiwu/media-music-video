@@ -1,6 +1,6 @@
-"""輕快流行編曲：照 song.json 的旋律與和弦產生多軌 GM 伴奏 MIDI 與 numpy 粗略預覽。旋律一個音都不改。
+"""編曲（輕快流行樂團／管弦樂進行曲）：照 song.json 的旋律與和弦產生多軌 GM 伴奏 MIDI 與 numpy 粗略預覽。旋律一個音都不改。
 
-用法：python arrange.py <song.json> [--key C] [--bpm 128] [--intro-bars 4] [--tag 輕快版] [--out 資料夾]
+用法：python arrange.py <song.json> [--key C] [--bpm 128] [--intro-bars 4] [--style band|march] [--tag 輕快版] [--out 資料夾]
 
 結構（每小節 16 個十六分音符）：
 - 前奏 N 小節：鐘琴＋銅管演奏最後 N 小節的旋律，和弦同那 N 小節
@@ -9,7 +9,8 @@
 - 副歌（chorus_bar 到最後）：全團、Crash、貝斯跳五度；brass_hits 指定小節的旋律加銅管重音
 - 尾奏：主和弦齊奏一小節
 song.json 沒寫 arrange.chorus_bar 時整首當主歌。人聲 MIDI 用 score.py 同一個 --intro-bars 對齊。
-輸出：伴奏_<tag>_<BPM>BPM.mid、_含旋律導引.mid（多一軌長笛奏旋律，試聽用）、伴奏預覽_*.wav（只聽結構，不是成品音質）
+--style march：管弦樂進行曲（見 March 類別說明），配 MuseScore General 音色庫算（render.py --sf MuseScore_General）
+輸出：伴奏_<tag>_<BPM>BPM.mid、_含旋律導引.mid（多一軌長笛奏旋律，試聽用）、伴奏預覽_*.wav（band 才有，只聽結構，不是成品音質）
 真樂器音色用 render.py（FluidSynth）把 MIDI 算成 wav。
 """
 import argparse
@@ -139,20 +140,184 @@ class Arrangement:
         return [(self.vocal_at + t, d, m + octave, 100) for t, d, m, *_ in self.song.events() if m is not None]
 
 
-def write_midi(path, tr, bpm):
+MARCH_PROGRAMS = {"strings": (0, 48), "cello": (1, 42), "pizz": (2, 45), "flute": (3, 73), "clarinet": (4, 71),
+                  "horn": (5, 60), "trumpet": (6, 56), "trombone": (7, 57), "drums": (9, None), "tuba": (10, 58),
+                  "timpani": (11, 47), "glock": (12, 9), "harp": (13, 46), "guide": (14, 73)}
+MARCH_VOLUME = {"strings": 100, "cello": 92, "pizz": 88, "flute": 78, "clarinet": 82, "horn": 92, "trumpet": 96,
+                "trombone": 86, "drums": 92, "tuba": 96, "timpani": 100, "glock": 72, "harp": 88, "guide": 90}
+
+
+class March(Arrangement):
+    """管弦樂進行曲：低音（大號＋撥弦）打一、三拍，法國號（副歌加長號）打二、四拍的「嗯—趴」；
+    弦樂鋪和弦、單簧管（主歌）／小提琴（副歌）吹和弦內音連成的對位線，副歌長笛高八度疊旋律；
+    小鼓進行曲節奏、大鼓＋鈸、定音鼓；前奏小號＋鐘琴奏最後一句，進副歌前豎琴琶音；尾奏全團主和弦＋定音鼓滾奏。
+    力度加隨機微調、起音略晚 0～10ms，弦樂用 CC11 做漸強漸弱。算圖：render.py --sf MuseScore_General --hall --gain 0.45"""
+    programs, volume = MARCH_PROGRAMS, MARCH_VOLUME
+
+    def build(self):
+        rng = np.random.default_rng(1)
+        tr = {k: [] for k in MARCH_PROGRAMS if k != "guide"}
+        cc = {"strings": [], "cello": []}
+
+        def add(part, s, d, m, v, human=True):
+            if human:
+                s += rng.uniform(0, 0.08)
+                v += int(rng.integers(-5, 6))
+            tr[part].append((s, d, m, int(np.clip(v, 1, 127))))
+
+        def voicing(pcs, lo, hi, n=4):
+            return sorted(m for m in range(lo, hi) if m % 12 in pcs)[:n]
+
+        def nearest(pcs, prev, lo, hi, prefer):
+            cands = [m for m in range(lo, hi) if m % 12 in pcs]
+            good = [m for m in cands if m % 12 in prefer] or cands
+            return min(good, key=lambda m: abs(m - prev))
+
+        def roll(part, s, d, m, v0, v1):
+            n = int(d * 2)  # 三十二分音符
+            for i in range(n):
+                add(part, s + i / 2, 0.5, m, int(v0 + (v1 - v0) * i / max(1, n - 1)), human=False)
+
+        halves = self.chord_halves()
+        line_w, line_v = 62, 74  # 對位線上一個音（單簧管、小提琴）
+        for idx, (s, d, name) in enumerate(halves):
+            sec = self.section(s)
+            _, pcs, bass = self.pcs(name)
+            third = {pcs[1]} | ({pcs[3]} if len(pcs) > 3 else set())
+            root = 36 + (bass - 36) % 12
+            loud = sec in ("chorus", "intro")
+            if sec == "outro":
+                for part, lo, hi, v in (("strings", 55, 84, 110), ("horn", 53, 67, 105), ("trombone", 48, 62, 105),
+                                        ("trumpet", 60, 76, 110), ("flute", 72, 88, 95), ("clarinet", 60, 72, 95)):
+                    for m in voicing(pcs, lo, hi):
+                        add(part, s, 16, m, v)
+                add("cello", s, 16, root + 12, 105)
+                add("tuba", s, 16, root, 110)
+                add("harp", s, 16, root + 24, 100)
+                continue
+            # 弦樂鋪底：每半小節一個和弦（同和弦連起來不重打），主歌輕、副歌厚
+            prev = halves[idx - 1][2] if idx else "?"
+            if name != prev or s % BAR == 0:
+                nxt = halves[idx + 1] if idx + 1 < len(halves) else None
+                dd = 16 if (d == 8 and s % BAR == 0 and nxt and nxt[2] == name) else d
+                for m in voicing(pcs, 55 if loud else 60, 76 if loud else 74, 4 if loud else 3):
+                    add("strings", s, dd, m, 82 if loud else 72)
+                add("cello", s, dd, root + 12, 80 if loud else 70)
+            # 對位線：取三音／七音、離上一個音最近
+            if sec == "verse":
+                line_w = nearest(pcs, line_w, 55, 70, third)
+                add("clarinet", s, 8, line_w, 74)
+            elif sec == "chorus":
+                line_v = nearest(pcs, line_v, 67, 82, third)
+                add("strings", s, 8, line_v, 88)
+            # 嗯—趴
+            fifth = root + 7 if root + 7 < 48 else root - 5
+            add("tuba", s, 3, root if s % BAR == 0 or d == BAR else fifth, 92 if loud else 80)
+            if sec != "intro" and d < BAR:
+                add("pizz", s, 2, root + 12, 85 if loud else 78)
+            for off in (4,) if d < BAR else (4, 12):
+                for m in voicing(pcs, 53, 66, 3):
+                    add("horn", s + off, 2, m, 82 if loud else 70)
+                if loud:
+                    for m in voicing(pcs, 48, 60, 2):
+                        add("trombone", s + off, 2, m, 78)
+            if d == BAR:  # 過門小節多打一個「嗯」
+                add("tuba", s + 8, 3, fifth, 88)
+
+        # 弦樂表情：主歌 92、副歌 112；進副歌前一小節漸強
+        for part in cc:
+            for bar in range(self.end // BAR):
+                s, sec = bar * BAR, self.section(bar * BAR)
+                base = {"intro": 105, "verse": 92, "chorus": 112, "outro": 115}[sec]
+                if bar == self.intro + self.chorus - 1:
+                    cc[part] += [(s + i, 11, int(92 + (115 - 92) * i / 15)) for i in range(16)]
+                elif bar == self.intro:
+                    cc[part] += [(s + i, 11, int(95 + 20 * i / 15)) for i in range(16)]
+                else:
+                    cc[part].append((s, 11, base))
+
+        # 打擊：小鼓（38）、大鼓（36）、鈸（49）、定音鼓
+        fills = {self.intro - 1, self.intro + self.chorus - 1, self.intro + self.nbars}
+        for bar in range(self.end // BAR):
+            s, sec = bar * BAR, self.section(bar * BAR)
+            _, pcs, bass = self.pcs(next(n for t, d, n in self.chord_halves() if t <= s < t + d))
+            timp = 41 + (bass - 41) % 12
+            if sec == "outro":
+                roll("timpani", s, 12, timp, 70, 115)
+                add("timpani", s + 12, 4, timp, 120)
+                roll("drums", s, 12, 38, 50, 110)
+                add("drums", s + 12, 4, 49, 120)
+                add("drums", s + 12, 4, 36, 120)
+                break
+            if bar == self.intro:  # 過門小節：小鼓、定音鼓滾奏漸強，留第四拍給人聲弱起
+                roll("drums", s, 12, 38, 45, 105)
+                roll("timpani", s, 12, timp, 50, 100)
+                continue
+            if sec == "verse":
+                pattern = ((4, 62), (12, 62), (14, 50), (15, 54))
+            else:
+                pattern = ((0, 100), (4, 88), (6, 66), (7, 70), (8, 96), (12, 88), (14, 72), (15, 78))
+            if bar in fills:
+                pattern = tuple(p for p in pattern if p[0] < 8)
+                roll("drums", s + 8, 8, 38, 60, 112)
+            for i, v in pattern:
+                add("drums", s + i, 1, 38, v)
+            add("drums", s, 2, 36, 96 if sec != "verse" else 78)
+            if sec != "verse":
+                add("drums", s + 8, 2, 36, 88)
+                add("drums", s, 4, 49, 78 if bar % 2 else 92)
+                add("timpani", s, 2, timp, 92)
+            if bar in (0, self.intro + 1, self.intro + self.chorus):
+                add("drums", s, 8, 49, 118)
+                add("timpani", s, 4, timp, 110)
+
+        # 豎琴：進副歌前的半小節由低到高琶音
+        s0 = self.bar_start(self.chorus) - 8
+        _, pcs, _ = self.pcs(next(n for t, d, n in halves if t <= s0 < t + d))
+        notes = [m for m in range(48, 96) if m % 12 in pcs]
+        for i, m in enumerate(notes[:16]):
+            add("harp", s0 + i * 0.5, 8 - i * 0.5, m, 70 + i * 2, human=False)
+
+        # 旋律：前奏小號＋鐘琴奏最後幾小節；副歌長笛高八度；brass_hits 小號＋長號重音
+        hits = set(self.song.arrange.get("brass_hits", []))
+        phrase_start = self.song.pickup_len + BAR * (self.nbars - self.intro)
+        for t, d, m, ch, py, first, bar_no in self.song.events():
+            if m is None:
+                continue
+            if self.intro and bar_no > self.nbars - self.intro:
+                tt = t - phrase_start
+                add("trumpet", tt, d, m, 100)
+                add("glock", tt, d, m + 24, 90)
+                add("flute", tt, d, m + 12, 80)
+            at = self.vocal_at + t
+            if self.section(at) == "chorus":
+                add("flute", at, d, m + 12, 72)
+            if bar_no in hits:
+                add("trumpet", at, d, m, 110)
+                add("trombone", at, d, m - 12, 100)
+        return tr, cc
+
+
+def write_midi(path, tr, bpm, programs=PROGRAMS, cc=None, volume=None):
+    """tr：{軌名: [(起點, 長度, 音, 力度)]}，位置以十六分音符計（可為小數）；
+    cc：{軌名: [(位置, 控制器號, 值)]}（例如 11 表情）；volume：{軌名: CC7 音量}"""
     tpq, tick = 480, 120
     chunks = [bytes(tempo_meta(bpm) + vlq(0) + b"\xff\x2f\x00")]
     for name, notes in tr.items():
-        ch, prog = PROGRAMS[name]
+        ch, prog = programs[name]
         evs = []
         for s, d, m, v in notes:
-            evs.append((s * tick, 1, bytes([0x90 | ch, m, v])))
-            evs.append(((s + d) * tick - 1, 0, bytes([0x80 | ch, m, 0])))
+            evs.append((round(s * tick), 2 if cc else 1, bytes([0x90 | ch, m, v])))
+            evs.append((round((s + d) * tick) - 1, 0, bytes([0x80 | ch, m, 0])))
+        for s, num, val in (cc or {}).get(name, []):
+            evs.append((round(s * tick), 1, bytes([0xB0 | ch, num, val])))
         evs.sort(key=lambda e: (e[0], e[1]))
         nm = name.encode()
         body = bytearray(vlq(0) + b"\xff\x03" + vlq(len(nm)) + nm)
         if prog is not None:
             body += vlq(0) + bytes([0xC0 | ch, prog])
+        if volume and name in volume:
+            body += vlq(0) + bytes([0xB0 | ch, 7, volume[name]])
         now = 0
         for t, _, msg in evs:
             body += vlq(t - now) + msg
@@ -228,22 +393,30 @@ def main():
     ap.add_argument("--key")
     ap.add_argument("--bpm", type=float, default=128)
     ap.add_argument("--intro-bars", type=int, default=4)
-    ap.add_argument("--tag", default="輕快版")
+    ap.add_argument("--style", choices=["band", "march"], default="band", help="band：輕快流行樂團；march：管弦樂進行曲")
+    ap.add_argument("--tag", help="檔名標籤，預設 band＝輕快版、march＝管弦進行曲版")
     ap.add_argument("--out")
     a = ap.parse_args()
     song = Song(a.song, a.key)
     out = Path(a.out) if a.out else song.path.parent
-    arr = Arrangement(song, a.intro_bars)
-    tr = arr.build()
-    name = f"{a.tag}_{a.bpm:g}BPM"
-    write_midi(out / f"伴奏_{name}.mid", tr, a.bpm)
-    write_midi(out / f"伴奏_{name}_含旋律導引.mid", {**tr, "guide": arr.guide(12)}, a.bpm)
-    y = render(tr, arr.end, a.bpm, guide=arr.guide())
-    write_wav(out / f"伴奏預覽_{name}_含旋律導引.wav", y)
-    write_wav(out / f"伴奏預覽_{name}_純伴奏.wav", render(tr, arr.end, a.bpm))
-    print(f"伴奏 {arr.end // BAR} 小節、{len(y) / 44100:.1f} 秒；人聲第一個字在 {arr.vocal_at * 15 / a.bpm:.2f} 秒"
+    name = f"{a.tag or {'band': '輕快版', 'march': '管弦進行曲版'}[a.style]}_{a.bpm:g}BPM"
+    if a.style == "march":
+        arr = March(song, a.intro_bars)
+        tr, cc = arr.build()
+        write_midi(out / f"伴奏_{name}.mid", tr, a.bpm, MARCH_PROGRAMS, cc, MARCH_VOLUME)
+        write_midi(out / f"伴奏_{name}_含旋律導引.mid", {**tr, "guide": arr.guide(12)}, a.bpm, MARCH_PROGRAMS, cc, MARCH_VOLUME)
+        sec = arr.end * 15 / a.bpm  # 管弦樂的 numpy 預覽沒有參考價值，直接用 render.py 算
+    else:
+        arr = Arrangement(song, a.intro_bars)
+        tr = arr.build()
+        write_midi(out / f"伴奏_{name}.mid", tr, a.bpm)
+        write_midi(out / f"伴奏_{name}_含旋律導引.mid", {**tr, "guide": arr.guide(12)}, a.bpm)
+        y = render(tr, arr.end, a.bpm, guide=arr.guide())
+        write_wav(out / f"伴奏預覽_{name}_含旋律導引.wav", y)
+        write_wav(out / f"伴奏預覽_{name}_純伴奏.wav", render(tr, arr.end, a.bpm))
+        sec = len(y) / 44100
+    print(f"伴奏_{name}.mid：{arr.end // BAR} 小節、{sec:.1f} 秒；人聲第一個字在 {arr.vocal_at * 15 / a.bpm:.2f} 秒"
           f"（人聲 MIDI：score.py --bpm {a.bpm:g} --intro-bars {a.intro_bars}）")
-
 
 if __name__ == "__main__":
     main()

@@ -34,7 +34,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-10-25：依留下的作品（兩首歌＋MV、一支配樂 showreel）改名 `media-comfyui-studio` → `media-music-video`（資料夾、GitHub repo、Obsidian 同步改）；
   同日 `experiments/` 與 H3 範本移到 `media-short-film/output/測試/早期實驗/`，SOP 的 H3 影片段落改指向該專案 `docs/`
 - 2026-10-26：作品資料夾比照 `media-short-film` 改成 `output/<類型>/<作品名>/`（歌曲MV／動態設計）：定案成品放最上層、工作檔放 `work/`、舊版放 `舊版/`，`notes.md` 改名 `製作紀錄.md`
-- 2026-10-28：〈校歌〉輕快改編——YuE2／ACE-Step 都做不到照譜唱（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
+- 2026-10-28：〈校歌〉輕快改編——YuE2 確定把中文唱成粵語，YuE2／ACE-Step 能否逐音照譜 10-29 改為未確定（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
   同日把這首的腳本整理成共用的 `tools/sing/` 與 `docs/照譜唱歌曲流程.md`
 
 ## 目標與路線圖

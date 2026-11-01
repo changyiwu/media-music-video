@@ -36,7 +36,8 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-10-26：作品資料夾比照 `media-short-film` 改成 `output/<類型>/<作品名>/`（歌曲MV／動態設計）：定案成品放最上層、工作檔放 `work/`、舊版放 `舊版/`，`notes.md` 改名 `製作紀錄.md`
 - 2026-10-28：〈校歌〉輕快改編——YuE2 確定把中文唱成粵語，YuE2／ACE-Step 能否逐音照譜 10-29 改為未確定（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
   同日把這首的腳本整理成共用的 `tools/sing/` 與 `docs/照譜唱歌曲流程.md`
-- 2026-11-01：評估 `Yari-tuber/mv-director`：只移植節拍分析（`tools/mv/listen.py`）與逐句分鏡方法；強制對齊試聽後不用，成片審查門檻不適合抒情 MV 也不移植
+- 2026-11-01：評估 `Yari-tuber/mv-director`：只移植節拍分析（`tools/mv/listen.py`）與逐句分鏡方法；強制對齊試聽後不用，成片審查門檻不適合抒情 MV 也不移植；
+  同日搬入兩個畫風庫的文字規則到 `styles/`，不搬樣片、工具與上游的 agent 指令檔
 
 ## 目標與路線圖
 
@@ -54,6 +55,7 @@ media-music-video/
 ├── docs/                作品製作 SOP、發布檢查清單、動畫 MV 畫面規則（模型知識指向 comfyui 技能，不另存一份）、照譜唱歌曲流程
 ├── tools/sing/          照譜唱歌曲工具（song.json → 人聲 MIDI、和弦、輕快編曲、FluidSynth 算圖、混音；只用 numpy＋ffmpeg）
 ├── tools/mv/            歌詞 MV 節拍分析（listen.py，取自 mv-director，MIT；只採用拍點與小節）
+├── styles/              畫風庫（lemo-opuscar、huashu-art-motion 的畫風文字與少量畫法程式，MIT；只借畫法，見 styles/README.md）
 ├── output/              所有產出（不進 git，只走雲端硬碟同步）；一件作品一個資料夾 `output/<類型>/<作品名>/`
 │   ├── <類型>/<作品名>/  最上層放定案成品與文件：<作品名>.mp4、_社群版.mp4、_手機版.mp4、<作品名>.mp3、字幕 .srt、
 │   │                    cover*.png、製作紀錄.md、發布資訊.md、歌詞.txt、主腳本；工作檔放 work/，舊版放 舊版/

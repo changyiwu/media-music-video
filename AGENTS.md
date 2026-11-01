@@ -36,6 +36,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-10-26：作品資料夾比照 `media-short-film` 改成 `output/<類型>/<作品名>/`（歌曲MV／動態設計）：定案成品放最上層、工作檔放 `work/`、舊版放 `舊版/`，`notes.md` 改名 `製作紀錄.md`
 - 2026-10-28：〈校歌〉輕快改編——YuE2 確定把中文唱成粵語，YuE2／ACE-Step 能否逐音照譜 10-29 改為未確定（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
   同日把這首的腳本整理成共用的 `tools/sing/` 與 `docs/照譜唱歌曲流程.md`
+- 2026-11-01：評估 `Yari-tuber/mv-director`：只移植節拍分析（`tools/mv/listen.py`）與逐句分鏡方法；強制對齊試聽後不用，成片審查門檻不適合抒情 MV 也不移植
 
 ## 目標與路線圖
 
@@ -52,6 +53,7 @@ media-music-video/
 ├── CLAUDE.md            橋接檔（@AGENTS.md）
 ├── docs/                作品製作 SOP、發布檢查清單、動畫 MV 畫面規則（模型知識指向 comfyui 技能，不另存一份）、照譜唱歌曲流程
 ├── tools/sing/          照譜唱歌曲工具（song.json → 人聲 MIDI、和弦、輕快編曲、FluidSynth 算圖、混音；只用 numpy＋ffmpeg）
+├── tools/mv/            歌詞 MV 節拍分析（listen.py，取自 mv-director，MIT；只採用拍點與小節）
 ├── output/              所有產出（不進 git，只走雲端硬碟同步）；一件作品一個資料夾 `output/<類型>/<作品名>/`
 │   ├── <類型>/<作品名>/  最上層放定案成品與文件：<作品名>.mp4、_社群版.mp4、_手機版.mp4、<作品名>.mp3、字幕 .srt、
 │   │                    cover*.png、製作紀錄.md、發布資訊.md、歌詞.txt、主腳本；工作檔放 work/，舊版放 舊版/
@@ -95,7 +97,7 @@ media-music-video/
   類型目前有 `歌曲MV`、`動態設計`；新作品不屬於這兩類再開新類型。
 - 換電腦重現作品前，先等該作品的資料夾雲端同步完成，再調整 `local-config.json`；本機設定檔維持忽略，不提交 Git。
 - 程式算圖的中間檔（上千張分鏡 PNG、配樂 wav）**放本機暫存資料夾，不要放進雲端硬碟**；專案只留腳本，成品放該作品的 `work/`，定案後移到作品資料夾最上層。
-- **音訊與訊號處理只用 numpy**（濾波用 FFT／STFT 自寫），不要讓作品腳本依賴 scipy：Windows 的智慧型應用程式控制會擋 scipy 的 DLL。
+- **音訊與訊號處理只用 numpy**（例外：`tools/mv/listen.py` 用 scipy，在獨立虛擬環境跑；濾波用 FFT／STFT 自寫），不要讓作品腳本依賴 scipy：Windows 的智慧型應用程式控制會擋 scipy 的 DLL。
   電腦 A 已於 2026-10-11 關閉它（ComfyUI 0.39.2 起一啟動就載入 scipy，開著 ComfyUI 整個起不來）；其他電腦開著的話會遇到同樣問題。
 - 舊作品的工作流程若沒留檔，**從輸出檔內嵌的 metadata 取回**（mp3／mp4 的 `format_tags.prompt`、PNG 的 `prompt` 區塊），不要憑記憶重寫。
 

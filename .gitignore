@@ -20,3 +20,6 @@ __pycache__/
 
 # 產出一律放 output/，不進 git
 output/
+
+# 範例的抽查圖（render.mjs --stills 預設輸出）
+examples/lyric-mv/stills/

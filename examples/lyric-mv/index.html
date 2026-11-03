@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>走到天亮｜歌詞 MV 範例</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg: #0b0a10; --fg: #f3ece6; --muted: #9a8f99; --accent: #ffb04a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+  #stage { display: block; width: min(100vw, calc((100vh - 96px) * 16 / 9)); aspect-ratio: 16 / 9; margin: 0 auto; background: #000; }
+  #ui { max-width: 1200px; margin: 10px auto; padding: 0 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  button { background: var(--accent); color: #1a0d05; border: 0; border-radius: 6px; padding: 8px 16px; font-weight: 700; cursor: pointer; font-size: 15px; }
+  #scrub { flex: 1; min-width: 200px; accent-color: var(--accent); }
+  #time { font-variant-numeric: tabular-nums; min-width: 120px; }
+  #shot { color: var(--muted); font-size: 14px; width: 100%; }
+  body.render #ui { display: none; }
+  body.render #stage { width: 1920px; height: 1080px; margin: 0; }
+</style>
+</head>
+<body>
+<canvas id="stage" width="1920" height="1080"></canvas>
+<div id="ui">
+  <button id="play">▶ 播放</button>
+  <input id="scrub" type="range" min="0" step="0.01" value="0">
+  <span id="time"></span>
+  <div id="shot"></div>
+</div>
+<audio id="audio" preload="auto"></audio>
+
+<script src="src/lyrics-data.js"></script>
+<script src="src/engine.js"></script>
+<script src="src/timeline.js"></script>
+<script src="src/rig.js"></script>
+<script src="src/subs.js"></script>
+<script src="src/scenes.js"></script>
+<script>
+(async () => {
+  const q = new URLSearchParams(location.search);
+  const canvas = document.getElementById('stage'), ctx = canvas.getContext('2d');
+  // 先確定字型載入，第一格才不會用到替代字型
+  await document.fonts.load(`900 100px ${TL.FONT}`, TL.TITLE + window.LYRICS.map(L => L.text).join(''));
+  window.DUR = TL.DUR;
+  window.renderAt = t => { Scenes.draw(ctx, t); return true; };   // tools/render.mjs 逐格呼叫
+  if (q.has('render')) { document.body.classList.add('render'); window.READY = true; return; }
+
+  // 預覽模式：跟著音檔播放（音檔預設 audio.wav，可用 ?audio=檔名 換；?t=12 從第 12 秒開始）
+  const audio = document.getElementById('audio'), btn = document.getElementById('play');
+  const scrub = document.getElementById('scrub'), time = document.getElementById('time'), shot = document.getElementById('shot');
+  audio.src = q.get('audio') || 'audio.wav';
+  scrub.max = TL.DUR;
+  let t = parseFloat(q.get('t') || '0');
+  audio.currentTime = t;
+  const show = () => {
+    Scenes.draw(ctx, t);
+    scrub.value = t;
+    time.textContent = `${t.toFixed(2)} / ${TL.DUR.toFixed(2)}`;
+    const s = TL.shotAt(t);
+    shot.textContent = `${s.id} ${s.name}（${s.start.toFixed(2)}–${s.end.toFixed(2)} 秒）：${s.action}`;
+  };
+  const loop = () => { if (!audio.paused) { t = audio.currentTime; show(); requestAnimationFrame(loop); } };
+  btn.onclick = () => {
+    if (audio.paused) { audio.currentTime = t; audio.play(); btn.textContent = '❚❚ 暫停'; requestAnimationFrame(loop); }
+    else { audio.pause(); btn.textContent = '▶ 播放'; }
+  };
+  audio.onended = () => { btn.textContent = '▶ 播放'; };
+  scrub.oninput = () => { t = parseFloat(scrub.value); audio.currentTime = t; show(); };
+  show();
+  window.READY = true;
+})();
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@
 - 開新作品、選型與發布前的 metadata 清除照 [docs/production-sop.md](docs/production-sop.md)；做動畫或歌詞 MV 前先讀它第五節的畫面規則。
 - 使用者給了譜、要照譜照詞唱的歌，照 [docs/照譜唱歌曲流程.md](docs/照譜唱歌曲流程.md)，不用 ComfyUI。
 - ComfyUI 的操作與模型規則以已安裝的 `comfyui` 技能為準，本專案不另存一份。
+- 想實際跑一遍：[examples/](examples/README.md) 有一個從歌譜到歌詞 MV 的完整小範例（自寫的 8 小節示範曲，只需要 Python、Node、Edge／Chrome、ffmpeg）。
 
 ## 目錄
 
@@ -21,6 +22,7 @@ media-music-video/
 ├── tools/sing/      照譜唱工具：song.json → 人聲 MIDI、和弦、編曲、FluidSynth 算圖、混音（numpy＋ffmpeg）
 ├── tools/mv/        歌詞 MV 節拍分析（listen.py）
 ├── styles/          畫風庫（見 styles/README.md）
+├── examples/        可完整跑一遍的範例：示範歌譜 → 伴奏 → 逐字時間 → 程式畫的歌詞 MV
 ├── templates/       官方工作流程快照（Z-Image、Qwen Image Edit）、發布資訊範本.md
 └── output/          作品，`output/<類型>/<作品名>/`（類型：歌曲MV、動態設計；不進 git）
 ```

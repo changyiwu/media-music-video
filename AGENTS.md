@@ -58,6 +58,7 @@ media-music-video/
 ├── tools/sing/          照譜唱歌曲工具（song.json → 人聲 MIDI、和弦、輕快編曲、FluidSynth 算圖、混音；只用 numpy＋ffmpeg）
 ├── tools/mv/            歌詞 MV 節拍分析（listen.py，取自 mv-director，MIT；只採用拍點與小節）
 ├── styles/              畫風庫（lemo-opuscar、huashu-art-motion 的畫風文字與少量畫法程式，MIT；只借畫法）＋本專案/（自寫的水墨一筆、沙畫筆記），見 styles/README.md
+├── examples/            公開的最小範例（自寫示範曲 song.json → 伴奏 → 照譜算逐字時間 → Canvas 歌詞 MV → render.mjs 出片）；作品本身不放這裡
 ├── output/              所有產出（不進 git，只走雲端硬碟同步）；一件作品一個資料夾 `output/<類型>/<作品名>/`
 │   ├── <類型>/<作品名>/  最上層放定案成品與文件：<作品名>.mp4、_社群版.mp4、_手機版.mp4、<作品名>.mp3、字幕 .srt、
 │   │                    cover*.png、製作紀錄.md、發布資訊.md、歌詞.txt、主腳本；工作檔放 work/，舊版放 舊版/

@@ -39,6 +39,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-11-01：評估 `Yari-tuber/mv-director`：只移植節拍分析（`tools/mv/listen.py`）與逐句分鏡方法；強制對齊試聽後不用，成片審查門檻不適合抒情 MV 也不移植；
   同日搬入兩個畫風庫的文字規則到 `styles/`，不搬樣片、工具與上游的 agent 指令檔
 - 2026-11-03：〈衝破這片天〉有五版 MV（各行各業、流場筆觸、水墨一筆、沙畫、社群直式 60 秒），各放一個 `MV-<畫風>/` 子資料夾、製作紀錄各一份；定案的各行各業版改名 `衝破這片天_各行各業.mp4`
+- 2026-11-03：repo 改為公開：歷史從 10-25 移走舊作品那次起算（更早的完整歷史封存在私有的 `media-music-video-archive`），電腦名改通稱、commit email 改 GitHub noreply；加根目錄 LICENSE（MIT，發布資訊範本除外）
 
 ## 目標與路線圖
 
@@ -94,8 +95,9 @@ media-music-video/
   用 ComfyUI（H3）做劇情／多段影片不在本專案做，流程與定案以 `media-short-film` 的 `docs/` 為準。
 - **做動畫或歌詞 MV（程式畫或生圖合成都算）前，先讀該檔第五節〈動畫／歌詞 MV 的畫面規則〉**：
   字幕位置與 KTV 掃色、坐姿要有椅子、手要碰到東西、朝向、不做危險動作等都是使用者定案的驗收條件。
-- **使用者的照片、聲音、完整提示詞只放在本私有專案**，不得寫進 agent-setup-guide（公開 repo）；
-  寫回技能時情境一律用通稱（例如「古裝庭院雙人短片」）。
+- **本 repo 是公開的**：使用者的照片、聲音、完整提示詞、歌詞全文、本機絕對路徑與真實電腦名只放在 `output/` 與 `handoff.md`（都不進 git），
+  不得寫進任何進 git 的檔案，也不得寫進 agent-setup-guide（同樣公開）；文件與技能裡提到時一律用通稱（例如「古裝庭院雙人短片」「電腦 A」）。
+  commit 前用 `git diff --cached` 確認沒有夾帶。
 - **社群發布文案照 [templates/發布資訊範本.md](templates/發布資訊範本.md)**：作品驗收通過後複製成 `output/<類型>/<作品名>/發布資訊.md`，依實際流程填寫 AI 揭露、工具名單與平台文案，發布後記錄公開網址。
 - **對外發布的成品一律另存一份清掉 metadata 的版本**，並用 `ffprobe`（圖片看 PNG 的 `prompt` 區塊）與位元組掃描驗證
   不含 `prompt`；ComfyUI 的原始輸出檔不動。影片、**mp3**（內嵌歌詞全文）、PNG 都會帶工作流程。
@@ -115,7 +117,7 @@ media-music-video/
 | 層級 | 平台 | 位置 | 讀取時機 |
 |------|------|------|---------|
 | L1 | 本地（GDrive） | `AGENTS.md`＋`handoff.md`（不進 git，只走雲端硬碟）＋`CLAUDE.md`（橋接） | 每個 session |
-| L2 | GitHub | [changyiwu/media-music-video](https://github.com/changyiwu/media-music-video)（**私有**） | 指定時 |
+| L2 | GitHub | [changyiwu/media-music-video](https://github.com/changyiwu/media-music-video)（**公開**；2026-11-03 前的完整歷史在私有封存 `changyiwu/media-music-video-archive`） | 指定時 |
 | L3 | Obsidian | `media-music-video/專案工作流程.md` | 有需要時 |
 
 ## 三個檔案的職責（依「時效性」分家，不是依「詳細程度」）

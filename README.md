@@ -2,7 +2,7 @@
 
 歌曲與配樂影片的作品庫：用本機 ComfyUI（Music 3）作曲、生圖，再用程式動畫做歌詞 MV、動態設計等配樂影片；照譜唱的歌改走 OpenUtau 歌聲合成＋程式編曲。
 
-本 repo（私有）只管**規則、工具與範本**；作品本身（音樂、影片、圖片、工作檔）都在 `output/`，不進 git，只走雲端硬碟同步。劇情短片在 `media-short-film`、純 Blender 作品在 `media-3d-studio`，不在這裡做。
+本 repo 只管**規則、工具與範本**；作品本身（音樂、影片、圖片、工作檔）都在 `output/`，不進 git，只走雲端硬碟同步。劇情短片在 `media-short-film`、純 Blender 作品在 `media-3d-studio`，不在這裡做。
 
 ## 開始之前
 
@@ -34,3 +34,10 @@ media-music-video/
 ## 第三方內容
 
 `styles/lemo-opuscar/`、`styles/huashu-art-motion/` 與 `tools/mv/listen.py`（取自 mv-director）是 MIT 授權的上游內容，授權檔放在各自資料夾，只借用畫法與節拍分析。
+
+## 授權
+
+- 本專案自寫的程式與文件採 [MIT](LICENSE)。
+- [templates/發布資訊範本.md](templates/發布資訊範本.md) 例外：改作自山獅霸的多重宇宙的範本，採 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hant)（不可商用），出處寫在該檔末尾。
+- 上面「第三方內容」列的資料夾依各自的 LICENSE（MIT，著作權屬原作者）。
+- `templates/qedit.json`、`templates/zimg.json` 是 ComfyUI 官方範本的工作流程快照，依 ComfyUI 範本原本的授權。

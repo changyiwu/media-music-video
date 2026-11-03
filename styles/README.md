@@ -4,7 +4,7 @@
 
 ## 怎麼用
 
-1. 查索引：`lemo-opuscar/INDEX.md`、`huashu-art-motion/references/风格配方/INDEX.md`。
+1. 查索引：`lemo-opuscar/INDEX.md`、`huashu-art-motion/references/风格配方/INDEX.md`，以及本專案自寫的 `本專案/`（水墨一筆、沙畫）。
 2. 依歌的年代、情緒與要畫的東西，挑 3–5 個給使用者選。
 3. 讀該畫風的說明，把色板、材質、線條、鏡頭、動作節奏寫進作品的 `製作紀錄.md`。
 4. 用過的畫風在 `製作紀錄.md` 與 `發布資訊.md` 署名出處。
@@ -19,6 +19,17 @@
 | `huashu-art-motion/` | [alchaincyf/huashu-art-motion](https://github.com/alchaincyf/huashu-art-motion) | `8a0d7d7` | MIT（見資料夾 LICENSE） |
 
 署名寫法：「畫風參考 LemoLab lemo-opuscar 的 <畫風名>（MIT）」、「畫風參考 花叔 huashu-art-motion 的 <畫風名>（MIT）」。
+
+## 本專案自寫的畫風（`本專案/`）
+
+上游沒有、在本專案做出來的畫風，畫法和使用者定案的規則寫在這裡，下一首歌可以直接選。程式留在首次使用的作品資料夾，筆記寫明位置。
+
+| 畫風 | 筆記 | 首次使用 |
+|---|---|---|
+| 水墨一筆 | [本專案/水墨一筆.md](本專案/水墨一筆.md) | 〈衝破這片天〉MV-水墨一筆（2026-11） |
+| 沙畫 | [本專案/沙畫.md](本專案/沙畫.md) | 〈衝破這片天〉MV-沙畫（2026-11） |
+
+流場筆觸用的是上游 huashu-art-motion 的 `09_postimp`，不另寫筆記；本專案的用法見〈衝破這片天〉`MV-流場筆觸/製作紀錄.md`。
 
 ## 搬了什麼
 

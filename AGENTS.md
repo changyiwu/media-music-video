@@ -56,13 +56,13 @@ media-music-video/
 ├── docs/                作品製作 SOP、發布檢查清單、動畫 MV 畫面規則（模型知識指向 comfyui 技能，不另存一份）、照譜唱歌曲流程
 ├── tools/sing/          照譜唱歌曲工具（song.json → 人聲 MIDI、和弦、輕快編曲、FluidSynth 算圖、混音；只用 numpy＋ffmpeg）
 ├── tools/mv/            歌詞 MV 節拍分析（listen.py，取自 mv-director，MIT；只採用拍點與小節）
-├── styles/              畫風庫（lemo-opuscar、huashu-art-motion 的畫風文字與少量畫法程式，MIT；只借畫法，見 styles/README.md）
+├── styles/              畫風庫（lemo-opuscar、huashu-art-motion 的畫風文字與少量畫法程式，MIT；只借畫法）＋本專案/（自寫的水墨一筆、沙畫筆記），見 styles/README.md
 ├── output/              所有產出（不進 git，只走雲端硬碟同步）；一件作品一個資料夾 `output/<類型>/<作品名>/`
 │   ├── <類型>/<作品名>/  最上層放定案成品與文件：<作品名>.mp4、_社群版.mp4、_手機版.mp4、<作品名>.mp3、字幕 .srt、
 │   │                    cover*.png、製作紀錄.md、發布資訊.md、歌詞.txt、主腳本；工作檔放 work/，舊版放 舊版/
 │   ├── 歌曲MV/
 │   │   ├── 衝破這片天/   華語搖滾抒情歌（2026-09，Music 3＋封面）與四版全程式 MV；最上層只放共用的歌曲成品（mp3、歌詞）
-│   │   │   ├── work/     歌曲共用：audio/、video/、workflows/（從 metadata 取回）、analysis/（listen.py 節拍）
+│   │   │   ├── work/     歌曲共用：audio/、video/、workflows/（從 metadata 取回）、analysis/（listen.py 節拍）、lyrics-data.js（三版共用的逐字時間）
 │   │   │   ├── MV-社群/   定案：衝破這片天_直式60秒_社群版.mp4（Z-Image 封面＋60 秒原曲）；work/ 放原檔、60 秒剪輯、封面原圖與工作流程
 │   │   │   ├── MV-各行各業/ 定案：衝破這片天_各行各業*.mp4、cover_各行各業*.png、發布資訊.md；work/ 是 Canvas 2D 骨架動畫＋KTV 字幕的原始專案
 │   │   │   ├── MV-流場筆觸/、MV-水墨一筆/、MV-沙畫/  各自的製作紀錄.md；work/ 放原始專案，成品在 work/video/（未定案）

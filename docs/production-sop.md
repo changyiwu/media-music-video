@@ -133,7 +133,7 @@ H3 影片（Ref2VA、首尾幀、定妝、加速 LoRA、參考影片等）的定
 - 新 MV 用 `tools/mv/listen.py` 取**拍點與小節**，不再用各作品自寫的 `analyze_audio.py`：兩首歌實測，舊工具的 BPM 都不符合鼓軌（125→94.55、86.39→74.80）。
 - 它的**段落標籤與逐字時間不採用**：〈衝破這片天〉的副歌曾被標成主歌，段落由 agent 對照歌詞判斷。
 - 環境：獨立虛擬環境，裝 `scipy matplotlib demucs torch torchaudio torchcodec`（demucs 需要 torch），不用 ComfyUI 的環境。分軌結果是中間檔，放本機暫存資料夾。
-- 流程：先分軌，再分析。`--lrc` 給帶時間的歌詞能幫助判斷小節頭；輸出放作品的 `work/mv/analysis/`，`audio.wav` 不留在雲端硬碟。
+- 流程：先分軌，再分析。`--lrc` 給帶時間的歌詞能幫助判斷小節頭；輸出放作品的 `work/analysis/`（節拍屬於歌曲，同一首歌的各版 MV 共用），`audio.wav` 不留在雲端硬碟。
 
 ```bash
 python -I -X utf8 -m demucs -n htdemucs -o <暫存資料夾> <歌.mp3>

@@ -74,7 +74,7 @@ node tools/render.mjs --workers 4 --audio audio.wav --out <暫存資料夾>/走�
 - **不是照譜的歌**（例如 AI 作曲）：沒有譜可算逐字時間，改用 Whisper 取逐字時間＋起音分析，節拍用 [tools/mv/listen.py](../tools/mv/listen.py)；做法見 [docs/production-sop.md](../docs/production-sop.md) 第五節。
 - **畫面**：分鏡表在 `src/timeline.js` 的 `SHOTS`，時間一律寫「第幾小節」；改 BPM 時同步改 `TL.BPM`、`TL.DUR`（`arrange.py` 印出來的秒數）。
   畫面規則（字幕位置、KTV 掃色、手要碰到東西、手不反折、多人不鏡像……）見 production-sop 第五節〈動畫／歌詞 MV 的畫面規則〉，這個範例都照做了。
-- 畫風可以從 [styles/](../styles/) 挑。
+- 畫風可以從 `media-code-video` 的[畫風庫](https://github.com/changyiwu/media-code-video/blob/main/styles/README.md)挑。
 
 ## 檔案
 

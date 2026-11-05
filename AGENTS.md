@@ -67,7 +67,8 @@ media-music-video/
 │   │   │   ├── work/     歌曲共用：audio/、video/、workflows/（從 metadata 取回）、analysis/（listen.py 節拍）、lyrics-data.js（三版共用的逐字時間）
 │   │   │   ├── MV-社群/   定案：衝破這片天_直式60秒_社群版.mp4（Z-Image 封面＋60 秒原曲）；work/ 放原檔、60 秒剪輯、封面原圖與工作流程
 │   │   │   ├── MV-各行各業/ 定案：衝破這片天_各行各業*.mp4、cover_各行各業*.png、發布資訊.md；work/ 是 Canvas 2D 骨架動畫＋KTV 字幕的原始專案
-│   │   │   ├── MV-流場筆觸/、MV-水墨一筆/、MV-沙畫/  各自的製作紀錄.md；work/ 放原始專案，成品在 work/video/（未定案）
+│   │   │   ├── MV-沙畫/   定案：衝破這片天_沙畫*.mp4、cover_沙畫*.png、發布資訊.md；work/ 是程式沙畫（沙厚度高度場＋手譜）的原始專案
+│   │   │   ├── MV-流場筆觸/、MV-水墨一筆/  各自的製作紀錄.md；work/ 放原始專案，成品在 work/video/（未定案）
 │   │   │   └── 舊版/     MV-試作/（木刻、水墨試作程式與試片）
 │   │   ├── 把光留給我/   教師節歌曲與生圖＋程式動畫 MV
 │   │   │   ├── work/     audio/、video/、image/、workflows/、mv/（全曲 v2 來源、分鏡與驗收紀錄）

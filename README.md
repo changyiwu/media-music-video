@@ -23,7 +23,7 @@ media-music-video/
 ├── tools/mv/        歌詞 MV 節拍分析（listen.py）
 ├── examples/        可完整跑一遍的範例：示範歌譜 → 伴奏 → 逐字時間 → 程式畫的歌詞 MV
 ├── templates/       官方工作流程快照（Z-Image、Qwen Image Edit）、發布資訊範本.md
-└── output/          作品，`output/<類型>/<作品名>/`（類型：歌曲MV；不進 git）
+└── output/          作品，`output/<作品名>/`（不進 git）
 ```
 
 ## 需要的環境

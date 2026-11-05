@@ -14,11 +14,11 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 
 ## 關鍵時程
 
-- 2026-09-15：歌曲〈衝破這片天〉（Music 3 三版＋Z-Image 封面，做成 FB 影片），09-18 整理進 `output/power-ballad/`（現為 `output/歌曲MV/衝破這片天/`）
+- 2026-09-15：歌曲〈衝破這片天〉（Music 3 三版＋Z-Image 封面，做成 FB 影片），09-18 整理進 `output/power-ballad/`（現為 `output/衝破這片天/`）
 - 2026-09-16～18：第一支片「古裝庭院惡搞短片」完成（四段、23 秒；2026-10-25 移至 `media-short-film/output/原創短劇/臭豆腐/`）
 - 2026-09-18：專案初始化（原名 `ai-video-studio`），從 `agents-lazy-guide/comfyui/` 整批搬入工作流程與實驗檔；
   同日收進歌曲作品、範圍擴大到影音作品，改名 `ai-media-studio`（GitHub 舊網址自動轉址）；2026-10-20 全 agents/ 改名為 `media-comfyui-studio`
-- 2026-09-28：〈衝破這片天〉歌曲定稿為剪接版（134 秒），並做成動態歌詞 MV（各行各業版，現在 `output/歌曲MV/衝破這片天/MV-各行各業/`；
+- 2026-09-28：〈衝破這片天〉歌曲定稿為剪接版（134 秒），並做成動態歌詞 MV（各行各業版，現在 `output/衝破這片天/MV-各行各業/`；
   畫面全用程式畫，歌曲仍是 Music 3）
 - 2026-09-29：仿蘋果發表廣告〈Banana 18 Pro〉60 秒 v3 完成（2026-10-25 移至 `media-3d-studio/output/banana-18-pro/`）——第一件**不用 ComfyUI**、
   全程式製作的作品（Blender bpy 建模算圖＋Python 合成＋numpy 合成配樂）
@@ -42,6 +42,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-11-03：〈衝破這片天〉有五版 MV（各行各業、流場筆觸、水墨一筆、沙畫、社群直式 60 秒），各放一個 `MV-<畫風>/` 子資料夾、製作紀錄各一份；定案的各行各業版改名 `衝破這片天_各行各業.mp4`
 - 2026-11-03：repo 改為公開：歷史從 10-25 移走舊作品那次起算（更早的完整歷史封存在私有的 `media-music-video-archive`），電腦名改通稱、commit email 改 GitHub noreply；加根目錄 LICENSE（MIT，發布資訊範本除外）
 - 2026-11-05：拆出 `media-code-video`（公開）：〈動態設計作品集〉與 `styles/` 畫風庫搬過去，本專案只留歌曲與歌詞 MV；歌詞 MV 的畫風改從該專案 `styles/` 挑
+- 2026-11-05：只剩歌曲MV一種類型，拿掉 `output/歌曲MV/` 這層，作品資料夾改成 `output/<作品名>/`
 
 ## 目標與路線圖
 
@@ -60,22 +61,21 @@ media-music-video/
 ├── tools/sing/          照譜唱歌曲工具（song.json → 人聲 MIDI、和弦、輕快編曲、FluidSynth 算圖、混音；只用 numpy＋ffmpeg）
 ├── tools/mv/            歌詞 MV 節拍分析（listen.py，取自 mv-director，MIT；只採用拍點與小節）
 ├── examples/            公開的最小範例（自寫示範曲 song.json → 伴奏 → 照譜算逐字時間 → Canvas 歌詞 MV → render.mjs 出片）；作品本身不放這裡
-├── output/              所有產出（不進 git，只走雲端硬碟同步）；一件作品一個資料夾 `output/<類型>/<作品名>/`
-│   ├── <類型>/<作品名>/  最上層放定案成品與文件：<作品名>.mp4、_社群版.mp4、_手機版.mp4、<作品名>.mp3、字幕 .srt、
+├── output/              所有產出（不進 git，只走雲端硬碟同步）；一件作品一個資料夾 `output/<作品名>/`
+│   ├── <作品名>/       最上層放定案成品與文件：<作品名>.mp4、_社群版.mp4、_手機版.mp4、<作品名>.mp3、字幕 .srt、
 │   │                    cover*.png、製作紀錄.md、發布資訊.md、歌詞.txt、主腳本；工作檔放 work/，舊版放 舊版/
-│   └── 歌曲MV/
-│       ├── 衝破這片天/   華語搖滾抒情歌（2026-09，Music 3＋封面）與多版全程式 MV；最上層只放共用的歌曲成品（mp3、歌詞）
-│       │   ├── work/     歌曲共用：audio/、video/、workflows/（從 metadata 取回）、analysis/（listen.py 節拍）、lyrics-data.js（三版共用的逐字時間）
-│       │   ├── MV-社群/   定案：衝破這片天_直式60秒_社群版.mp4（Z-Image 封面＋60 秒原曲）；work/ 放原檔、60 秒剪輯、封面原圖與工作流程
-│       │   ├── MV-各行各業/ 定案：衝破這片天_各行各業*.mp4、cover_各行各業*.png、發布資訊.md；work/ 是 Canvas 2D 骨架動畫＋KTV 字幕的原始專案
-│       │   ├── MV-沙畫/   定案：衝破這片天_沙畫*.mp4、cover_沙畫*.png、發布資訊.md；work/ 是程式沙畫（沙厚度高度場＋手譜）的原始專案
-│       │   ├── MV-流場筆觸/、MV-水墨一筆/  各自的製作紀錄.md；work/ 放原始專案，成品在 work/video/（未定案）
-│       │   └── 舊版/     MV-試作/（木刻、水墨試作程式與試片）
-│       ├── 把光留給我/   教師節歌曲與生圖＋程式動畫 MV
-│       │   ├── work/     audio/、video/、image/、workflows/、mv/（全曲 v2 來源、分鏡與驗收紀錄）
-│       │   └── 舊版/     mv-試片/（10 秒試片）、mv-full-v1/（全曲 v1）
-│       └── 校歌/        校歌搖滾改編（2026-10，照譜唱：OpenUtau 绮萱＋tools/sing/ 編曲）
-│           └── work/     譜/（song.json、MIDI、OpenUtau 專案）、audio/（各版伴奏、人聲、混音）、旋律分析/、image/
+│   ├── 衝破這片天/   華語搖滾抒情歌（2026-09，Music 3＋封面）與多版全程式 MV；最上層只放共用的歌曲成品（mp3、歌詞）
+│   │   ├── work/     歌曲共用：audio/、video/、workflows/（從 metadata 取回）、analysis/（listen.py 節拍）、lyrics-data.js（三版共用的逐字時間）
+│   │   ├── MV-社群/   定案：衝破這片天_直式60秒_社群版.mp4（Z-Image 封面＋60 秒原曲）；work/ 放原檔、60 秒剪輯、封面原圖與工作流程
+│   │   ├── MV-各行各業/ 定案：衝破這片天_各行各業*.mp4、cover_各行各業*.png、發布資訊.md；work/ 是 Canvas 2D 骨架動畫＋KTV 字幕的原始專案
+│   │   ├── MV-沙畫/   定案：衝破這片天_沙畫*.mp4、cover_沙畫*.png、發布資訊.md；work/ 是程式沙畫（沙厚度高度場＋手譜）的原始專案
+│   │   ├── MV-流場筆觸/、MV-水墨一筆/  各自的製作紀錄.md；work/ 放原始專案，成品在 work/video/（未定案）
+│   │   └── 舊版/     MV-試作/（木刻、水墨試作程式與試片）
+│   ├── 把光留給我/   教師節歌曲與生圖＋程式動畫 MV
+│   │   ├── work/     audio/、video/、image/、workflows/、mv/（全曲 v2 來源、分鏡與驗收紀錄）
+│   │   └── 舊版/     mv-試片/（10 秒試片）、mv-full-v1/（全曲 v1）
+│   └── 校歌/        校歌搖滾改編（2026-10，照譜唱：OpenUtau 绮萱＋tools/sing/ 編曲）
+│       └── work/     譜/（song.json、MIDI、OpenUtau 專案）、audio/（各版伴奏、人聲、混音）、旋律分析/、image/
 ├── templates/           官方工作流程快照（Z-Image、Qwen Image Edit）、發布資訊範本.md（YouTube／Facebook／Instagram／Threads；各媒體專案各一份、內容逐位元組相同，正本在 media-youtube-publish 的 `skills/youtube-long/references/`，改正本再整份覆蓋，不在本專案就地改）
 └── scratch/             comfy-cli 回傳、節點資訊、紀錄等暫存（不進 git）
 ```
@@ -100,12 +100,12 @@ media-music-video/
 - **本 repo 是公開的**：使用者的照片、聲音、完整提示詞、歌詞全文、本機絕對路徑與真實電腦名只放在 `output/` 與 `handoff.md`（都不進 git），
   不得寫進任何進 git 的檔案，也不得寫進 agent-setup-guide（同樣公開）；文件與技能裡提到時一律用通稱（例如「古裝庭院雙人短片」「電腦 A」）。
   commit 前用 `git diff --cached` 確認沒有夾帶。
-- **社群發布文案照 [templates/發布資訊範本.md](templates/發布資訊範本.md)**：作品驗收通過後複製成 `output/<類型>/<作品名>/發布資訊.md`，依實際流程填寫 AI 揭露、工具名單與平台文案，發布後記錄公開網址。
+- **社群發布文案照 [templates/發布資訊範本.md](templates/發布資訊範本.md)**：作品驗收通過後複製成 `output/<作品名>/發布資訊.md`，依實際流程填寫 AI 揭露、工具名單與平台文案，發布後記錄公開網址。
 - **對外發布的成品一律另存一份清掉 metadata 的版本**，並用 `ffprobe`（圖片看 PNG 的 `prompt` 區塊）與位元組掃描驗證
   不含 `prompt`；ComfyUI 的原始輸出檔不動。影片、**mp3**（內嵌歌詞全文）、PNG 都會帶工作流程。
 - **聲音由使用者試聽**（agent 聽不到），包括台詞、參考聲音像不像、段落接點的環境音。
-- 每件作品一個資料夾 `output/<類型>/<作品名>/`（作品名用中文標題），至少有 `製作紀錄.md`；`scratch/` 放暫存、不進 git。
-  類型目前有 `歌曲MV`；沒有歌、直接用程式做的影片到 `media-code-video` 做。
+- 每件作品一個資料夾 `output/<作品名>/`（作品名用中文標題），至少有 `製作紀錄.md`；`scratch/` 放暫存、不進 git。
+  不再分類型層（2026-11-05 拿掉 `歌曲MV/`）；沒有歌、直接用程式做的影片到 `media-code-video` 做。
 - **同一首歌有兩版以上 MV 時，每版開一個 `MV-<畫風>/` 子資料夾**，該版的成品、封面、發布資訊、製作紀錄都放在裡面，檔名加畫風後綴；歌曲那一層只放各版共用的。
   完整規則（結構圖、命名、路徑深度、分版時機、搬移驗證）見 `docs/production-sop.md` 第一節〈一首歌有多版 MV 時的資料夾〉。
 - 換電腦重現作品前，先等該作品的資料夾雲端同步完成，再調整 `local-config.json`；本機設定檔維持忽略，不提交 Git。
@@ -143,4 +143,4 @@ media-music-video/
 - 修改共用檔案前先讀最新內容，避免覆蓋其他 Agent 的變更
 - 所有回應與文件使用繁體中文
 - 修改前先確認計畫，優先保留原有資料結構
-- **產出一律放 `output/`**：本專案產生的檔案或資料夾（成品、匯出、報表、生成圖、渲染等）預設放專案根目錄的 `output/`，不另開 `outputs/`、`exports/`、`generated/`、`out/` 之類的資料夾，方便找；`output/` 不進 git。部署工具指定的建置目錄（`dist/`、`build/`）不在此限。本專案每件作品一個 `output/<類型>/<作品名>/`，定案成品放最上層、工作檔放 `work/`、舊版放 `舊版/`
+- **產出一律放 `output/`**：本專案產生的檔案或資料夾（成品、匯出、報表、生成圖、渲染等）預設放專案根目錄的 `output/`，不另開 `outputs/`、`exports/`、`generated/`、`out/` 之類的資料夾，方便找；`output/` 不進 git。部署工具指定的建置目錄（`dist/`、`build/`）不在此限。本專案每件作品一個 `output/<作品名>/`，定案成品放最上層、工作檔放 `work/`、舊版放 `舊版/`

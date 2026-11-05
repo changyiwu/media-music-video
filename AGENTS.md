@@ -110,8 +110,7 @@ media-music-video/
   完整規則（結構圖、命名、路徑深度、分版時機、搬移驗證）見 `docs/production-sop.md` 第一節〈一首歌有多版 MV 時的資料夾〉。
 - 換電腦重現作品前，先等該作品的資料夾雲端同步完成，再調整 `local-config.json`；本機設定檔維持忽略，不提交 Git。
 - 程式算圖的中間檔（上千張分鏡 PNG、配樂 wav）**放本機暫存資料夾，不要放進雲端硬碟**；專案只留腳本，成品放該作品的 `work/`，定案後移到作品資料夾最上層。
-- **音訊與訊號處理只用 numpy**（例外：`tools/mv/listen.py` 用 scipy，在獨立虛擬環境跑；濾波用 FFT／STFT 自寫），不要讓作品腳本依賴 scipy：Windows 的智慧型應用程式控制會擋 scipy 的 DLL。
-  電腦 A 已於 2026-10-11 關閉它（ComfyUI 0.39.2 起一啟動就載入 scipy，開著 ComfyUI 整個起不來）；其他電腦開著的話會遇到同樣問題。
+- **音訊與訊號處理可用 numpy、scipy**：各電腦已關閉 Windows 智慧型應用程式控制（它會擋 scipy 的 DLL）；換到還開著它的電腦時，先關掉或改用純 numpy。
 - 舊作品的工作流程若沒留檔，**從輸出檔內嵌的 metadata 取回**（mp3／mp4 的 `format_tags.prompt`、PNG 的 `prompt` 區塊），不要憑記憶重寫。
 
 ## 同步層級（本專案初始化至第三層級）

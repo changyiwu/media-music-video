@@ -29,8 +29,8 @@ media-music-video/
 ## 需要的環境
 
 - 本機 ComfyUI（`comfy-cli`）與 `comfyui` 技能
-- Python＋numpy、ffmpeg；照譜唱另需 OpenUtau 與 FluidSynth
-- 作品腳本不依賴 scipy（Windows 智慧型應用程式控制會擋它的 DLL），`tools/mv/listen.py` 例外，在獨立虛擬環境跑
+- Python＋numpy、scipy、ffmpeg；照譜唱另需 OpenUtau 與 FluidSynth
+- 音訊處理可用 scipy；前提是已關閉 Windows 智慧型應用程式控制（它會擋 scipy 的 DLL），沒關的電腦先關掉或改用純 numpy
 
 ## 第三方內容
 

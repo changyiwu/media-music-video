@@ -2,7 +2,6 @@
 
 來源：Yari-tuber/mv-director commit 79af43a 的 scripts/listen.py（MIT，見同資料夾 LICENSE）。
 本專案改動：拿掉強制對齊（align.py）。其餘維持上游程式，方便對照。
-scipy 是本工具的例外（AGENTS.md），作品腳本仍只用 numpy。
 
 上游說明如下。
 mv-director 第 1 步 · 听歌拆解：把一首歌拆成做 MV 用得上的数据。

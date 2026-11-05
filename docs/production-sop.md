@@ -15,7 +15,7 @@
 | 歌曲風格描述怎麼寫（更高、更有力） | 技能 `models/minimax-music3.md` |
 | **照譜、照詞唱的歌**（校歌、既有歌曲改編，旋律不能改） | [照譜唱歌曲流程](照譜唱歌曲流程.md)＋`tools/sing/` |
 | 歌詞 MV 的拍點與小節 | 本檔第五節〈歌詞 MV：節拍分析〉＋`tools/mv/listen.py` |
-| 歌詞 MV 要選什麼畫風、畫風怎麼畫 | `media-code-video` 的[畫風庫](https://github.com/changyiwu/media-code-video/blob/main/styles/README.md)（只借畫法，畫面規則仍以本檔第五節為準） |
+| 歌詞 MV 要選什麼畫風、畫風怎麼畫 | `media-code-video` 的[畫風庫](https://github.com/changyiwu/media-code-video/blob/main/畫風索引.md)（只借畫法，畫面規則仍以本檔第五節為準） |
 | **開一件新作品的流程、發布前要驗什麼** | **本檔** |
 | 社群貼文、YouTube 說明欄、AI 揭露與工具名單怎麼寫 | [發布資訊範本](../templates/發布資訊範本.md)，複製成 `output/<作品名>/發布資訊.md` 後填寫 |
 | 動畫／歌詞 MV 的字幕、人物、動作要守哪些規則 | 本檔第五節〈動畫／歌詞 MV 的畫面規則〉 |

@@ -22,7 +22,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
   畫面全用程式畫，歌曲仍是 Music 3）
 - 2026-09-29：仿蘋果發表廣告〈Banana 18 Pro〉60 秒 v3 完成（2026-10-25 移至 `media-3d-studio/output/banana-18-pro/`）——第一件**不用 ComfyUI**、
   全程式製作的作品（Blender bpy 建模算圖＋Python 合成＋numpy 合成配樂）
-- 2026-10-09：15 秒動態設計 showreel〈動態設計作品集〉（2026-11-05 移至 `media-code-video/output/動態設計/`）——Canvas 2D 全程式動畫＋numpy 配樂，128 BPM 八場對拍；同日另做 HyperFrames 比較版（`hf/`）
+- 2026-10-09：15 秒動態設計 showreel〈動態設計作品集〉（2026-11-05 移至 `media-code-video/output/動態設計作品集/`）——Canvas 2D 全程式動畫＋numpy 配樂，128 BPM 八場對拍；同日另做 HyperFrames 比較版（`hf/`）
 - 2026-10-11：測試 Blender 灰模動作片當 H3 Ref2VA 參考影片（2026-10-25 瘦身後移至 `media-short-film/output/測試/測試_H3灰模動作參考/`）——動作會照做、時間逐格對齊，
   推翻先前「Blender previz 這條路劃掉」的結論（只對機位成立）；結論寫回 `comfyui`（guide v0.15）
 - 2026-10-12：同一測試補三項——人物照＋灰模動作片可同時用（指定的人做指定的動作）、灰模片的運鏡會跟且壓過文字、
@@ -38,7 +38,7 @@ H3 劇情短片改在 `media-short-film` 專案做，純 Blender 作品改在 `m
 - 2026-10-28：〈校歌〉輕快改編——YuE2 確定把中文唱成粵語，YuE2／ACE-Step 能否逐音照譜 10-29 改為未確定（經驗寫回 comfyui 技能），改走 OpenUtau 歌聲合成＋程式編曲＋FluidSynth；
   同日把這首的腳本整理成共用的 `tools/sing/` 與 `docs/照譜唱歌曲流程.md`
 - 2026-11-01：評估 `Yari-tuber/mv-director`：只移植節拍分析（`tools/mv/listen.py`）與逐句分鏡方法；強制對齊試聽後不用，成片審查門檻不適合抒情 MV 也不移植；
-  同日搬入兩個畫風庫的文字規則到 `styles/`，不搬樣片、工具與上游的 agent 指令檔（2026-11-05 移至 `media-code-video/styles/`）
+  同日搬入兩個畫風庫的文字規則到 `styles/`，不搬樣片、工具與上游的 agent 指令檔（2026-11-05 移至 `media-code-video/styles/`，上游畫風庫現在 `upstream/`）
 - 2026-11-03：〈衝破這片天〉有五版 MV（各行各業、流場筆觸、水墨一筆、沙畫、社群直式 60 秒），各放一個 `MV-<畫風>/` 子資料夾、製作紀錄各一份；定案的各行各業版改名 `衝破這片天_各行各業.mp4`
 - 2026-11-03：repo 改為公開：歷史從 10-25 移走舊作品那次起算（更早的完整歷史封存在私有的 `media-music-video-archive`），電腦名改通稱、commit email 改 GitHub noreply；加根目錄 LICENSE（MIT，發布資訊範本除外）
 - 2026-11-05：拆出 `media-code-video`（公開）：〈動態設計作品集〉與 `styles/` 畫風庫搬過去，本專案只留歌曲與歌詞 MV；歌詞 MV 的畫風改從該專案 `styles/` 挑
@@ -96,7 +96,7 @@ media-music-video/
 - **做動畫或歌詞 MV（程式畫或生圖合成都算）前，先讀該檔第五節〈動畫／歌詞 MV 的畫面規則〉**：
   字幕位置與 KTV 掃色、坐姿要有椅子、手要碰到東西、朝向、不做危險動作等都是使用者定案的驗收條件。
   這一節與第四節的 metadata 驗證也是 `media-code-video` 的正本（它只指向這裡），改的時候兩邊都適用。
-- **歌詞 MV 的畫風從 `media-code-video` 的 `styles/` 挑**（照它的 `styles/README.md`），本專案不另存畫風庫；自寫的新畫風筆記寫進那邊的 `styles/本專案/`。
+- **歌詞 MV 的畫風從 `media-code-video` 挑**（照它根目錄的 `畫風索引.md`），本專案不另存畫風庫；自寫的新畫風筆記直接寫進那邊的 `styles/`。
 - **本 repo 是公開的**：使用者的照片、聲音、完整提示詞、歌詞全文、本機絕對路徑與真實電腦名只放在 `output/` 與 `handoff.md`（都不進 git），
   不得寫進任何進 git 的檔案，也不得寫進 agent-setup-guide（同樣公開）；文件與技能裡提到時一律用通稱（例如「古裝庭院雙人短片」「電腦 A」）。
   commit 前用 `git diff --cached` 確認沒有夾帶。
